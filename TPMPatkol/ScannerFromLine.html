@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Scanner</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="Content/jquery-ui.css" rel="stylesheet" />
+    <link href="Content/responsive.bootstrap.min.css" rel="stylesheet" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <style>
+        body {
+            padding-top: 0;
+        }
+
+        #mycanvas {
+            height: 400px;
+            width: 100%;
+            border: solid 1px #000;
+            padding: 10px;
+        }
+
+        .subtitle {
+            margin: 0 0 2em 0;
+        }
+
+        .fancy {
+            line-height: 0.5;
+            text-align: center;
+        }
+
+            .fancy span {
+                display: inline-block;
+                position: relative;
+                /*font-weight: 900;*/
+                font-size: 18px;
+            }
+
+                .fancy span:before,
+                .fancy span:after {
+                    content: "";
+                    position: absolute;
+                    height: 5px;
+                    border-bottom: 1px solid #000;
+                    border-top: 1px solid #000;
+                    top: 0;
+                    width: 2em;
+                }
+
+                .fancy span:before {
+                    right: 100%;
+                    margin-right: 15px;
+                }
+
+                .fancy span:after {
+                    left: 100%;
+                    margin-left: 15px;
+                }
+
+        .wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            min-height: 70vh;
+            padding: 20px;
+        }
+
+        .formContent {
+            border: 1px solid #E1E1E1;
+            -webkit-border-radius: 10px 10px 10px 10px;
+            border-radius: 10px 10px 10px 10px;
+            background: #fff;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="formContent">
+            <div class="row" style="text-align: center">
+                <h2>SCAN QRCODE</h2>
+                <h4>( DEMO )</h4>
+                <span id="cam-has-camera" style="display: none;"></span>
+                <video muted playsinline id="qr-video" style="height: 300px; width: 80%; border: solid 1px #000; background-image: url('Images/IMGBoxScanQr.png'); background-repeat: no-repeat; background-position: center;"></video>
+                <div style="width: 100%;">
+                    <button id="btnScan" class="btn btn-info" style="width: 150px; background-color: #337ab7; color: #fff;">Scan</button>
+                </div>
+            </div>
+            <!--<div class="row" style="margin-top: 20px; text-align: center">
+                <p class="subtitle fancy"><span>or TPM Code</span></p>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <input type="text" id="txtTPMCode" class="form-control" style="margin: auto" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <button id="btnSubmit" class="btn btn-info" style="width: 150px; background-color: #337ab7; color: #fff;">Submit</button>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+    </div>
+
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+
+        var GetLiffID = getAllUrlParams("LiffID");
+        const defaultLiffId = GetLiffID; //?LiffID=1623482821-1py6QaL6
+        let myLiffId = GetLiffID;
+
+        myLiffId = defaultLiffId;
+        if (myLiffId) {
+            liff.init({
+                liffId: myLiffId
+            }).then(() => {
+                $("#IMGUpload").modal('show');
+
+                liff.getProfile().then(function (profile) {
+                    $("#LineTokenLine").val(profile.userId);
+                    $("#DisplayNameLine").val(profile.displayName);
+                    $("#PictureLine").val(profile.pictureUrl);
+                }).catch(function (error) {
+                    window.alert('Error getting profile: ' + error);
+                    $("#IMGUpload").modal('hide');
+                });
+            }).catch((err) => {
+                $("#IMGUpload").modal('hide');
+            });
+        }
+
+
+
+        $("#btnScan").on('click', function () {
+            $("#qr-video").css("height", "100%").css("width", "100%");
+
+        });
+
+
+
+
+    </script>
+</body>
+</html>
